@@ -1,0 +1,45 @@
+---
+title: "README"
+format: gfm
+editor: visual
+---
+
+a\. This small segment of code is assigning values to the variables "vonset" and "voffset", and the value is derived from the specified points in the textgrid. It is then getting different duration values, first the baseline durationV by subtracting onset from offset, then percentile duration values for the 20%, 35%, 50%, 65%, and 80% duration points.
+
+b\. The first section of the script is choosing where to save the output of the script, creating the empty .csv file, creating new columns for the F1 and F2 values at different percentages. Then it is opening the stim folder and accessing the data, selecting the .wav file and textgrid. It runs a loop the set defaults and check intervals, then assigns an identifier to the data, in my case "akr", to show whose data it is. Then it actually extracts all of the measurements and assigns them to the proper variables, as seen in my answer above. Finally it saves everything it just did and outputs it in the .csv file as well as a Praat window, then cleans the original Praat window.
+
+c\. This week because there was filler content around the interest areas, and there was far more content to segment, I had to adapt new ways to navigate the textgrid. Additionally, rather than finding vowel midpoints we were finding full vowel durations inside of words in multiple languages, so I had to learn to differentiate (at least a somewhat) between different types of sounds in the spectrogram.
+
+```{r}
+library(tidyverse)
+library(stringr)
+library(dplyr)
+```
+
+```{r}
+dat <- read_csv( "./data/vowel_data.csv")
+glimpse(dat)
+```
+
+```{r}
+dat %>%
+  summarize(f2m = mean(f2_cent),f1m = mean(f1_cent),tlm = mean(tl), f2sd = sd(f2_cent), f1sd = sd(f1_cent), tlsd = sd(tl)) 
+ 
+```
+
+```{r}
+dat %>%
+  ggplot() +
+  aes(x = language, y = tl, fill = vowel) +
+geom_boxplot()
+
+dat %>%
+  ggplot() +
+  aes(x = language, y = f1_cent, fill = vowel) +
+geom_boxplot()
+
+dat %>%
+  ggplot() +
+  aes(x = language, y = f2_cent, fill = vowel) +
+geom_boxplot()
+```
